@@ -1,9 +1,16 @@
+# emcs_2025
+# https://ipol-unb.github.io/emcs_2025/
+# https://posit.co/download/rstudio-desktop/
+# https://posit.cloud/
+# https://pt.r4ds.hadley.nz/
 
 ## R como calculadora
 
 
-# Um função primordial e básica do R, como software estatístico, é de calculadora
-# O R possui os operadores básicos da matemática como '+' , '-', '*' e '/'
+# Uma função primordial e básica do R, 
+# como software estatístico, é de calculadora
+# O R possui os operadores básicos da matemática 
+# como '+' , '-', '*' e '/'
 
 
 5 + 5 + 5
@@ -14,7 +21,7 @@
 
 16 / 2
 
-
+2^3
 
 ## R como calculadora
 
@@ -29,13 +36,9 @@
 
 # Respectivamente, ^ e sqrt()
 
-
 2 ^ 2
 
 sqrt(36)
-
-
-
 
 ## Lógica
 
@@ -63,7 +66,7 @@ TRUE == TRUE
 
 TRUE <= FALSE
 
-# Assim como estamos caracteres
+# Assim como testamos caracteres
 
 "Python" == "python"
 
@@ -96,6 +99,8 @@ TRUE <= FALSE
 
 
 sorte <- 5
+c <- 3
+3 -> d
 sortea = 6
 rm(sortea)
 
