@@ -1,0 +1,27 @@
+---
+title: "Escola de Métodos em Ciências Sociais 2025"
+subtitle: "Curso de R"
+author: "Frederico Bertholini"
+lang: pt-BR
+format: 
+  html:
+    self-contained: true
+    theme: solar
+    logo: logo.png
+---
+
+### Aula 1  - Conhecendo o R
+10.mar.2024 - [Slides](https://ipol-unb.github.io/emcs_2025/aula1)
+
+### Aula 2 - Conhecendo seus Dados
+11.mar.2024 - [Slides](https://ipol-unb.github.io/emcs_2025/aula2)
+
+### Aula 3  - Preparando seus Dados
+12.mar.2024 - [Slides](https://ipol-unb.github.io/emcs_2025/aula3)
+
+### Aula 4  - Manipulando seus Dados
+13.mar.2024 - [Slides](https://ipol-unb.github.io/emcs_2025/aula4)
+
+### Aula 5  - Comunicando seus Dados (ggplot e relatórios)
+14.mar.2024 - [Slides](https://ipol-unb.github.io/emcs_2025/aula5)
+

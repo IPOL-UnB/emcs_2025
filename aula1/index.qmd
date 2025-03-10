@@ -1,0 +1,334 @@
+---
+title: "Aula 1 - Conhecendo o R"
+author: "Frederico Bertholini"
+subtitle: "Escola de Métodos em Ciências Sociais"
+format: 
+    revealjs:
+      self-contained: true
+      touch: true
+      lang: pt-BR
+      toc: true
+      toc-depth: 1
+      theme: moon
+      footer: CURSO DE R
+      logo: imgs/logo.png
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T,eval=T)
+```
+
+
+# Abrindo o R e conhecendo o software
+
+## Passos iniciais
+
+  - R é um software de **PROGRAMAÇÃO ESTATÍSTICA**
+  
+:::{.callout-note}
+Tem dividido com o Python o posto de software mais popular entre cientistas sociais   
+:::
+
+  - Vantagens:  
+    -- Software Livre   
+    -- Documentação completa e acessível  
+    -- Diversidade de arquivos  
+    -- Replicabilidade de rotinas
+
+
+## Um Excel que usou o suco?
+
+  - Se é possível fazer no Excel, é possível fazer no R
+  - Entretanto, se é possível fazer no R, não necessariamente é possível fazer no Excel
+
+Ambiente de desenvolvimento para cálculos estatísticos e gráficos
+
+Vários cálculos estatísticos mais sofisticados estão disponíveis no R através de pacotes desenvolvidos pela comunidade
+
+## Habilidades necessárias
+
+Escrita:  
+  -- Elementos (ex: `numeric, character, factor`...);  
+  -- Funções básicas (ex: `sum(), table(), sd()`);  
+  -- Composição do script (ex: `c(), for loop`);  
+
+Leitura:  
+  -- Identificação de funções;  
+  -- Diferentes soluções;  
+  -- Alertas de erros;
+
+:::{.callout-important}
+adquirir **autonomia** com o software
+:::
+
+## Habilidade mais importante 
+
+Dada a multiplicidade de soluções, de alertas de erros e o universo de pacotes com diversas funções
+
+**`a habilidade mais importante é saber pesquisar no Google`**  
+
+Melhor em inglês pela quantidade de fóruns:  
+  
+  -- Melhor fórum: [Stackoverflow](https://stackoverflow.com/)
+  
+  -- [Posit Community](https://community.rstudio.com/) despontando
+
+:::{.callout-tip}
+IA como nova 'habilidade': além do ChatGPT
+:::
+
+# RStudio
+
+## RStudio
+
+  - RStudio é um ambiente para desenvolvimento do R (IDE)
+  - Ao longo do curso utilizaremos o RStudio  
+  - Utilizando nada dos botões ou possibilidades específicas do RStudio  
+
+>> Posit (<https://posit.co/download/rstudio-desktop/>)
+
+[Posit Cloud for free](https://posit.cloud/)
+
+## Aparência do RStudio
+
+![Aparência](imgs/1.png)
+
+
+## Básico do básico: um operador e um comando
+
+Linhas escritas no ambiente onde se registra o script (Scripts são arquivos de texto)
+
+Ctrl + enter (cmd + enter no mac)
+
+  - Executa (roda) as funções e programações escritas nas linhas selecionadas  
+  
+Hastags  
+
+  - Insere comentários sem gerar outputs (organizar e registrar dentro dos scripts)  
+
+
+Fluxos: scripts e projetos
+
+## Como sai no R?
+
+```{r,eval=F}
+#Insere comentarios sem rodar o comando
+
+Importante para organizar e
+
+# Erro: unexpected symbol in "Importante para"
+
+##Registrar o que se vai fazer ou foi feito
+
+```
+
+
+## R como calculadora 1
+
+  - Um função primordial e básica do R, como software estatístico, é de calculadora
+  - O R possui os operadores básicos da matemática como '+' , '-', '*' e '/'
+
+```{r}
+5 + 5
+
+5 - 3
+
+4 * 9
+
+16 / 2
+
+```
+    
+
+
+## R como calculadora 2
+
+  - Assim como na matemática, atenção em relação aos ()
+  
+```{r}
+(5 + 6) * 3
+
+5 + 6 * 3
+```
+  - Além das funções de exponencial e raiz quadrada
+  
+  - Respectivamente, ^ e sqrt()
+  
+```{r}
+2 ^ 2
+
+sqrt(36)
+```
+   
+
+
+## Lógica
+
+  - O R permite também avaliações lógicas
+  - Ou seja, o software possui operadores lógicos afim de fazer testes lógicos com resultados de Verdadeiro ou Falso de acordo com a proposição
+  - Os principais operadores são $==$, $<$ , $>$, $<=$ , $>=$ e $!=$
+```{r}
+5 == 5
+
+5 <= 5 / 5
+
+5 * 4 > 5
+
+3 != 6
+```
+    
+
+
+## Teste lógicos
+
+  - Testamos também Verdade e Falsidade
+```{r}
+TRUE == TRUE
+
+TRUE <= FALSE
+```
+  - Assim como estamos caracteres
+```{r}
+"Python" == "python"
+
+"Stata" != "Sasta"
+
+```
+
+
+
+## Operadores lógicos especiais
+
+  - Atenção para os operadores e e ou
+  - O primeiro, para ser verdade, precisa que todos os pressupostos sejam verdadeiros
+```{r}
+(3 == 3) & (4 != 5)
+```
+  - O ou, por sua vez, para ser verdade precisa que apenas 1 pressuposto seja verdadeiro
+```{r}
+(3 != 3) | (4 != 5)
+```
+    
+# Criação de Objetos
+
+## Atribuição
+
+  - Trata-se da famosa 'setinha' que indica objetos (valores, vetores, dataframes) para alguma etiqueta
+  - Dessa maneira, podemos 'salvar' os objetos nas etiquetas para utilizarmos através dessas em qualquer momento ao longo do script
+  - Quando utilizadas em operações, as etiquetas representam aquilo que fora atribuído a elas
+  - Quando criamos a etiqueta, não geramos outputs, apenas quando rodamos diretamente a etiqueta
+  
+```{r}
+sorte <- 5
+```
+
+
+
+## Regras do uso da setinha
+
+  - Atenção, letras maiúsculas e minúsculas importam
+
+```{r,eval=F}
+sorte <- 5
+
+Sorte
+
+# Erro: objeto 'Sorte' não encontrado
+
+```
+
+## Regras do uso da setinha
+  - Também não podemos criar etiquetas que começam com números
+```{r,eval=F}
+
+15luck <- 15
+
+# Erro: unexpected symbol in "15luck"
+
+```
+
+Cuidado com a utilização de etiquetas (nomes de objetos) com o mesmo nome de funções, pode gerar confusão no script
+
+
+## Classes
+
+Em basicamente tudo que iremos fazer no R, a classe da informação importa
+Em termos elementares, ou ao nível dos valores, existem três grandes classes:  
+  - Numeric (númerico);  
+  - Logical (lógico);  
+  - Character ou factor (caracteres);
+  
+**Para obter a informação sobre a classe, iremos aprender nossa primeira função no R: class()**
+    
+
+## Númerico
+
+  - `numeric` é a classe composta por valores númericos
+```{r}
+class(sorte)
+
+```
+  - Objetos deste tipo permitem funções matemáticas como média, mediana etc...
+  
+## Separador de decimais = .
+  - No caso de valores decimais, utilizamos ponto em vez de vírgula
+```{r, eval=F}
+decimal <- 3,5
+
+# Erro: ',' inesperado in "decimal <- 3,"
+
+decimal <- 3.5
+
+
+```
+    
+
+
+## Lógico
+
+  - `logical` é a classe composta por TRUE, FALSE e NA
+  
+```{r}
+vdd <- TRUE
+
+class(vdd)
+
+```
+  
+  - Não é preciso escrever sempre TRUE e FALSE, podemos resumir para T e F, respectivamente
+  
+  - Por trás dos valores T e F, há valores númericos correspondente a 1 e 0
+  
+```{r}
+T + F
+
+```
+
+
+## Caracteres
+
+  - `character` é a classe composta por nomes
+  
+  - Importante característica é que os nomes devem estar dentro de aspas, caso contrário, o R não reconhecerá como caracter
+  
+```{r}
+nome <- "Fred"
+
+nome
+
+class(nome)
+
+```
+    
+
+
+## Caracteres vs Fatores
+
+  - Em termos estatísticos, não há diferença entre caracteres e fatores
+  - Fatores apresentam as categorias por dentro de vetor.
+  - Em termos de manipulação de dataframes, porém, veremos que esses dois objetos terão tratamento distintos, a começar pela importação da base e a definição de string tratada como factor
+    
+
+
+
