@@ -1,0 +1,698 @@
+---
+title: "Aula 2 - Conhecendo seus Dados"
+author: "Frederico Bertholini"
+subtitle: "Escola de Métodos em Ciência Política"
+format: 
+    revealjs:
+      self-contained: true
+      lang: pt-BR
+      toc: true
+      toc-depth: 1
+      theme: moon
+      footer: CURSO DE R
+      logo: imgs/logo.png
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T,eval=T)
+```
+
+# Criação de Objetos
+
+## Atribuição
+
+  - Trata-se da famosa 'setinha' que indica objetos (valores, vetores, dataframes) para alguma etiqueta
+  - Dessa maneira, podemos 'salvar' os objetos nas etiquetas para utilizarmos através dessas em qualquer momento ao longo do script
+  - Quando utilizadas em operações, as etiquetas representam aquilo que fora atribuído a elas
+  - Quando criamos a etiqueta, não geramos outputs, apenas quando rodamos diretamente a etiqueta
+  
+```{r}
+sorte <- 5
+```
+
+
+
+## Regras do uso da setinha
+
+  - Atenção, letras maiúsculas e minúsculas importam
+
+```{r,eval=F}
+sorte <- 5
+
+Sorte
+
+# Erro: objeto 'Sorte' não encontrado
+
+```
+
+## Regras do uso da setinha
+  - Também não podemos criar etiquetas que começam com números
+```{r,eval=F}
+
+15luck <- 15
+
+# Erro: unexpected symbol in "15luck"
+
+```
+
+Cuidado com a utilização de etiquetas (nomes de objetos) com o mesmo nome de funções, pode gerar confusão no script
+
+
+## Classes
+
+Em basicamente tudo que iremos fazer no R, a classe da informação importa
+Em termos elementares, ou ao nível dos valores, existem três grandes classes:  
+  - Numeric (númerico);  
+  - Logical (lógico);  
+  - Character ou factor (caracteres);
+  
+**Para obter a informação sobre a classe, iremos aprender nossa primeira função no R: class()**
+    
+
+## Númerico
+
+  - `numeric` é a classe composta por valores númericos
+```{r}
+class(sorte)
+
+```
+  - Objetos deste tipo permitem funções matemáticas como média, mediana etc...
+  
+## Separador de decimais = .
+  - No caso de valores decimais, utilizamos ponto em vez de vírgula
+```{r, eval=F}
+decimal <- 3,5
+
+# Erro: ',' inesperado in "decimal <- 3,"
+
+decimal <- 3.5
+
+
+```
+    
+
+
+## Lógico
+
+  - `logical` é a classe composta por TRUE, FALSE e NA
+  
+```{r}
+vdd <- TRUE
+
+class(vdd)
+
+```
+  
+  - Não é preciso escrever sempre TRUE e FALSE, podemos resumir para T e F, respectivamente
+  
+  - Por trás dos valores T e F, há valores númericos correspondente a 1 e 0
+  
+```{r}
+T + F
+
+```
+
+
+## Caracteres
+
+  - `character` é a classe composta por nomes
+  
+  - Importante característica é que os nomes devem estar dentro de aspas, caso contrário, o R não reconhecerá como caracter
+  
+```{r}
+nome <- "Fred"
+
+nome
+
+class(nome)
+
+```
+    
+
+
+## Caracteres vs Fatores
+
+  - Em termos estatísticos, não há diferença entre caracteres e fatores
+  - Fatores apresentam as categorias por dentro de vetor.
+  - Em termos de manipulação de dataframes, porém, veremos que esses dois objetos terão tratamento distintos, a começar pela importação da base e a definição de string tratada como factor
+
+# Vetores
+
+## O que são vetores?
+ 
+  - Vetores são combinações de valores em uma estrutura unidimensional 
+  - Ou seja, podem ser combinações de números, valores lógicos, nomes e várias outras possibilidades
+  - Por exemplo, combinação de valores pares: 2,4,6,8
+  - Ou a combinações de nomes começando por P: Pedro, Paula, Pietro, Paloma
+  - Combinação de valores lógico: TRUE, FALSE, TRUE, TRUE
+ 
+ 
+## Criação de vetores
+ 
+  - Para criar vetores é importante combinar valores
+  - A função necessária para a criação de vetores é a função c(), c de *combine* ou *concatenate*
+```{r}
+c(2,4,6,8)
+
+c("Pedro","Paula","Pietro","Paloma")
+
+c(TRUE,FALSE,TRUE,FALSE)
+``` 
+  
+ 
+## Etiquetas para vetores
+ 
+  - Assim como fizemos com os valores, atribuímos também etiquetas aos vetores
+  - Dessa maneira, podemos trabalhar com as sequências ao longo do script, assim como dar razão ou justificativa aos valores combinados
+```{r}
+n.pares <- c(2,4,6,8)
+
+nomes.com.p <- 
+c("Pedro","Paula","Pietro","Paloma") 
+
+valores.log <- c(TRUE,FALSE,TRUE,FALSE)
+``` 
+  
+ 
+## Classes dos vetores
+ 
+  - Os vetores também possuem classes
+  - Essas categorias determinam as operações possíveis dentro de um vetor
+  - Para obter a informação sobre a classe de um vetor, utilizamos a função class()
+```{r}
+class(n.pares)
+
+class(nomes.com.p)
+
+class(valores.log)
+``` 
+  
+ 
+
+## Comprimento de vetores
+ 
+  - Os vetores podem ser medidos em relação ao seu comprimento
+  - O seu comprimento define a extensão do vetor, assim como quantos elementos estão presentes dentro da combinação de valores
+  - O comprimento pode ser medido pela função length()
+```{r}
+length(n.pares)
+
+length(nomes.com.p)
+
+length(valores.log)
+``` 
+ 
+ 
+ 
+
+## Somatório de vetores
+ 
+  - Para vetores númerico podemos somar os valores de um vetor
+  - A função se chama sum() que corresponde ao $\sum$
+```{r}
+sum(n.pares)
+
+``` 
+  - Em vetores com valores lógicos, com TRUE e FALSE, o sum soma o número de T que temos dentro de um vetor
+
+```{r}
+sum(valores.log)
+
+``` 
+
+ 
+## Somatório de vetores lógicos
+ 
+  - A função sum() pode se tornar ainda um contador de um teste
+  - Por exemplo, queremos saber quantos nomes são iguais ao de Pedro no vetor 'nomes.com.p'
+```{r}
+teste1 <- nomes.com.p == "Pedro"
+
+sum(teste1)
+
+teste1
+``` 
+ 
+
+## Seleção de elementos
+ 
+  - Queremos selecionar no vetor nomes.com.p o segundo elemento que é Paula
+  - Vejamos, primeiro, como se compõe o vetor de caracteres nomes.com.p e a lógica do posicionamento dentro do vetor
+```{r}
+nomes.com.p
+``` 
+
+ 
+
+## Usando `%in%` na Seleção de elementos
+ 
+  - Vamos testar se Paula se inclui dentro do vetor sem termos que ver no console
+  - As vezes, vetores são maiores do que temos como exemplo
+  - Para o teste lógico, utilizamos o operador %in%, que retorna TRUE, caso o valor esteja incluso no vetor
+```{r}
+"Paula" %in% nomes.com.p
+``` 
+ 
+
+
+## Regras de Seleção de elementos
+ 
+  - Algumas operações se restrigem a determinados elementos ou a um conjunto deles incluso dentro de um vetor
+  - Para realizar tais procedimentos precisamos saber escolher elementos
+  - Para isso, utilizaremos o operador '[]' depois de apontar o vetor
+  - Mais especificamente: 
+ Vetor; 
+ []; 
+ Posição ou regra; 
+ 
+ 
+
+## Alternativas de Seleção 1
+ 
+  - Para escolhar Paula, portanto, vamos definir como a segunda posição dentro do vetor
+```{r}
+nomes.com.p[2]
+``` 
+  - O posicionamento dos nomes ao longo do vetor determina como seleciona-lo individualmente
+  - Porém, podemos selecionar através do valor
+```{r}
+nomes.com.p[nomes.com.p == "Paula"]
+``` 
+ 
+ 
+##  Alternativas de Seleção 2
+ 
+  - Selecionamos também o último valor do vetor nomes.com.p
+  - Sabemos que o vetor possui 4 valores utilizando a função length()
+```{r}
+length(nomes.com.p)
+``` 
+
+##  Alternativas de Seleção 3
+  - Assim o último valor é igual a 4
+  - Para selecionarmos o último valor, ou definimos como a posição 4 ou apenas o length() do vetor
+```{r}
+nomes.com.p[4]
+
+nomes.com.p[length(nomes.com.p)]
+
+``` 
+ 
+ 
+## Seleção de elementos
+ 
+  - Para seleção de elementos através de regras, podemos utilizar o vetor númerico de n.pares
+```{r}
+n.pares  <- c(2,4,6,8)
+
+n.pares
+
+``` 
+  - O objetivo aqui é selecionar os elementos maiores que 5, que é a mediana do vetor
+```{r}
+median(n.pares)
+
+``` 
+ 
+ 
+
+## Seleção de elementos
+ 
+  - Selecionamos, assim, os elementos acima da mediana do vetor n.pares, que são os valores 6 e 8
+```{r}
+n.pares[n.pares > 5]
+``` 
+  - Ou ainda podemos definir o valor 5 como o valor da mediana
+  - O resultado é o mesmo, porém, deixa claro ao leitor do seu script que se trata dos valores acima da mediana do vetor n.pares
+```{r}
+n.pares[n.pares > median(n.pares)]
+``` 
+
+# Operações matemáticas
+
+## Operações com vetores
+  - Em vetores numéricos, podemos fazer operações matemáticas a partir do seu posicionamento
+  - Vamos calcular o alcance do vetor "n.pares"
+```{r}
+#ultimo elemento 
+n.pares[length(n.pares)]
+
+#primeiro elemento
+n.pares[1]
+
+``` 
+  - Subtraindo esses dois elementos, temos o alcance do vetor
+```{r}
+n.pares[length(n.pares)] - n.pares[1]
+
+``` 
+
+
+## Operações com vetores
+ 
+  - Ainda em vetores numéricos, vamos calcular vetores com regras
+  - Selecionamos elementos maiores que 5
+```{r}
+n.pares[n.pares >= 5]
+
+``` 
+  - Queremos duplicar os valores inclusos dentro da condição
+```{r}
+n.pares[n.pares >= 5] * 2
+
+``` 
+  - Por fim, operacionar um conjunto com um elemento
+```{r}
+n.pares[n.pares >= 5] * n.pares[1]
+
+``` 
+ 
+
+## Conjuntos
+ 
+  - Utilizamos a teoria de conjuntos no R com a função de manipular e identificar elementos comuns ou diferente entre vetores
+  - Já temos o vetor "n.pares" e vamos criar um vetor com números naturais
+```{r}
+n.naturais <- c(0,1,2,3,4,5,6,7,8,9)
+n.naturais
+
+``` 
+  - Se perguntarmos por valores que não estão no vetor "n.naturais", o resultado será conjunto vazio
+```{r}
+n.naturais[n.naturais == 10]
+``` 
+ 
+ 
+
+## Conjuntos
+ 
+  - Outro ponto importante é saber se os elementos estão contidos dentro de outro vetor
+  - A pergunta a se fazer é: os elementos do vetor "n.partidos" está contido no vetor "n.naturais"
+  - No R, contidos é igual a \%in\%
+```{r}
+n.pares %in% n.naturais
+
+``` 
+
+## Conjuntos
+
+  - Isto é, o vetor "n.pares" está contido no vetor "n.naturais" e é um subconjunto
+  - Outra maneira é utilizando a função is.element()
+```{r}
+is.element(n.pares,n.naturais)
+
+``` 
+ 
+ 
+## Conjuntos
+ 
+  - Para encontrar os valores exclusivos de um conjunto, vamos utilizar a escrita da seleção de elementos
+  - Podemos incluir a notação de "!", que quer dizer diferente
+  - Portanto, selecionamos os valores que estão contido no conjunto dos naturais, porém não no conjunto dos valores pares
+```{r}
+n.naturais[!is.element(n.naturais,n.pares)]
+
+``` 
+ 
+
+## Conjuntos
+ 
+  - Por fim, vamos testar se um valor está presente em um desses vetores
+  - Testaremos os valores 1, 11 e 21
+```{r}
+1 %in% c(n.naturais,n.pares)
+
+11 %in% c(n.naturais,n.pares)
+
+21 %in% c(n.naturais,n.pares)
+``` 
+  - Assim, não temos os valores 11 e 21 em nenhum dos vetores, entendidos como conjuntos 
+ 
+
+
+# data.frame
+
+## data.frame
+ 
+  - Um `data.frame` é o mesmo que uma tabela do SQL ou uma planilha Excel
+  
+  - seus dados provavelmente serão importados para um objeto data.frame 
+
+  - data.frame’s são listas especiais em que todos os elementos possuem o mesmo comprimento.
+
+  - Cada elemento dessa lista pode ser pensado como uma coluna da tabela - ou como uma variável. Uso do '$'
+
+  - Seu comprimento representa o número de linhas - ou seja, de observações
+
+
+## Estrutura de dados - data.frame
+
+![](imgs/dados.png)
+
+
+## data.frame de perto
+
+  - Como data.frames's são listas, suas colunas podem ser de classes diferentes. Essa é a grande diferença entre data.frame’s e matrizes.
+
+Funções úteis:
+```{r,eval=F} 
+head() # Mostra as primeiras 6 linhas.
+tail() # Mostra as últimas 6 linhas.
+dim() # Número de linhas e de colunas.
+names() # Os nomes das colunas (variáveis).
+str() # Estrutura do data.frame. Mostra, entre outras coisas, as >classes de cada coluna.
+cbind() # Acopla duas tabelas lado a lado.
+rbind() # Empilha duas tabelas.
+```  
+
+# Pacotes
+## O que são pacotes
+ 
+  - O R possui diversas funções já instaladas dentro da sua programação
+  - Exemplos são sum(), length(), class(), c()
+  - Outras, porém, devem ser instaladas para que possam ser utilizadas pelos usuários
+  - A maneira com a qual instalamos novas funções, não definidas anteriormente no software, é através de pacotes
+  
+## O que são pacotes
+  - Pacotes concentram diversas funções para diversas demandas  
+ Importação de dados;  
+ Organização de banco de dados;  
+ Análises estatísticas específicas;  
+ Gráficos diferenciados;  
+ 
+ 
+
+## O que são pacotes
+ 
+  - A instalação de qualquer pacote pode ser feita por dentro do R
+  - Para isso, porém, é preciso primeiro conexão com a internet, já que o R busca o novo pacote no repositório de pacotes
+  - A função para instalar pacote, portanto, é install.packages()
+  - O nome da nova função deve vir, primeiramente entre parenteses
+  
+## O que são pacotes
+
+  - Podemos começar instalando o pacote para importação de bases de dados: foreign
+```{r,eval=F} 
+install.packages("foreign")
+```  
+  - Após alguns segundos, e algumas mensagens no console, a instalação será efetivada
+ 
+ 
+
+## Ativar pacotes
+ 
+  - Cada pacote, inclusive o foreign, tem uma documentação disponível na internet
+  - Nessa documentação estão disponíveis as funções que o pacote possui, além do nome do seu criador
+  - As função não ficam disponíveis assim que o pacote termina a instalação
+  - Para ativar as funções do pacote, é preciso utilizar a função library()
+```{r} 
+library(foreign)
+```  
+  - Repare, que uma vez instalado, o nome do pacote não precisa mais estar entre aspas
+ 
+ 
+## Ativar pacotes
+ 
+  - Portanto, para começarmos o procedimento de instalação do pacote, seguimos os passos a seguir:  
+ Caso não esteja instalado, instalar o pacote através da função install.packages();  
+ Para ativar o pacote, utilizar a função library() sem as aspas no nome do pacote instalado  
+```{r,eval=F} 
+install.packages("foreign")
+
+library(foreign)
+```  
+  - Uma vez instalado o pacote, não é preciso instalar mais a não ser que você reinstale o R
+ 
+ 
+
+# Importação de dados
+## Passo a passo
+ 
+  - A importação é uma das tarefas que demandam mais atenção no R
+  - É preciso ter um conhecimento prévio de como sua base externa está constituída
+  - Outra informação importante é a extensão do arquivo da base
+  - Primeiramente, a informação que deve ser dada ao software é onde está a base - diretório de trabalho
+  - A função necessária é setwd() que define o diretório da sua seção no R
+  - Dentro da função, iremos inserir o local do arquivo  
+ Em caso de Windows, inverta as barras ou duplique;  
+ Não se esqueça das aspas;  
+ 
+```{r,eval=F} 
+
+setwd("/Volumes/Macintosh HD/MQCP_IPOL_2020/Slides/aula 03") # mmudando meu direto
+
+```  
+ 
+ 
+
+## Passo a passo
+ 
+  - Esse diretório definido significa que as bases e os gráficos produzidos serão enviados para essa pasta
+  - Finalmente, vamos importar as bases de dados
+  - Primeiro, vamos importar a base de extensão txt com o nome baserm
+  - Não é preciso de pacote para esse procedimento
+```{r} 
+lines <- readLines("dados/baserm.txt")
+
+baserm <- read.table(text = lines, sep = '\t')
+```  
+  - Repare que definimos a base dentro das aspas e com a extensão
+  - Na segunda linha, o primeiro argumento é o texto, o segundo argumento trata de como os dados estão separados, geralmente txt vem separado assim
+ 
+
+
+## Passo a passo
+ 
+  - No pacote foreign, a forma mais genérica de importação da base é o read.table()
+  - Entretanto, o pacote apresenta uma série de especialidades, a depender da extensão em questão
+  - Para CSV, vimos que tem a read.csv(). Já para dta, base de origem do stata, temos a função read.dta()
+  - O pacote foreign não possui a extensão xlsx e xls, extensão muito encontrada e comum entre as bases de dados disponíveis
+  - Para isso, vamos instalar um novo pacote readxl
+```{r,eval=F} 
+install.packages("readxl")
+```  
+  - Esse pacote disponibiliza as funções read_xls() e read_xlsx()
+ 
+ 
+
+## Passo a passo
+ 
+  - Vamos ativar as funções disponíveis no pacote readxl com a função library()
+```{r} 
+library(readxl)
+```  
+  - Vamos importar a base controle_cgu_municípios.xlsx
+```{r} 
+cgu <- 
+read_xlsx("dados/controle_cgu_municípios.xlsx")
+```  
+  - Repare que acessamos apenas a primeira página da base
+  - Para acessarmos a segunda páginas, utilizamos o argumento sheet=2
+```{r,eval=F} 
+cgu <- 
+read_xlsx("dados/controle_cgu_municípios.xlsx", 
+sheet = 2)
+```  
+  - Alguns sinais de alerta surgem, porém não se trata de erro
+ 
+
+
+## Importação por pacote 
+ 
+  - Por fim, podemos importar dados através de pacotes
+  - Após ativar o pacote "ElectionsBR", a função legend_fed() fica disponível para a importação
+  - Como toda a função, ou quase todas, possui argumentos importantes:
+      - 'year =' se refere ao ano de extração
+      - 'uf =' se refere à UF
+
+## Importação
+ 
+ - Vamos começar importando dados de coalizões pré-eleitorais (coligações) do DF em 2018, nos retornando um objeto em 'tbl_df' e data frame
+      
+```{r} 
+library(electionsBR)
+leg_df_2018 <- legend_fed(year = 2018,uf="DF")
+
+```  
+      - Provavelmente, demorará alguns segundos, até minutos, para a importação
+      - Além disso, essa forma **demanda acesso à internet**
+ 
+
+## Visualizando a base
+ 
+  - Primeira coisa importante de se informar é a classe desses objetos
+  - Temos 3 objetos: baserm, cgu e leg_df_2018
+```{r} 
+class(baserm)
+
+class(cgu)
+
+class(leg_df_2018)
+```  
+  
+
+## Visualizando a base
+ 
+  - Uma visão completa da base é o comando View()
+  - Entretanto, cuidado, dependendo do tamanho da base, podemos travar o software
+```{r, eval=F} 
+View(leg_df_2018)
+```  
+  - Repare no V maiúsculo, lembre-se que o R é bastante sensível na sua linguagem
+  - O View() abre uma nova aba com a base no formato de grade
+  - Podemos, assim, visualizar a base de dados na forma mais intuitiva
+ 
+ 
+
+## Visualizando a base
+ 
+  - Porém, para bases grandes, sabemos que é grande demais para sua visualização ser feita através do View()
+  - Algumas funções podem nos ajudar nessa tarefa
+  - A primeira é o dim, que as dimensões da base
+```{r} 
+dim(leg_df_2018)
+```  
+  - O primeiro valor sempre retrata o número de linhas, ou observações, enquanto o segundo valor apresenta o número de colunas, ou variáveis
+  - As funções ncol() e length() também fazem isso
+ 
+ 
+
+## Visualizando a base
+ 
+  - Outra função importante na visualização de bases de dados é a lista de nomes
+  - A função names() descreve as variáveis presentes na base
+  - Isso facilita no momento de selecionar as variáveis que entrarão na análise de vocês
+```{r} 
+names(leg_df_2018)
+                  
+```  
+ 
+ 
+
+## Visualizando a base - `str()`
+ 
+  - Outra função possível é o str()
+  - Essa função apresenta o nome das variáveis, a classe de cada uma delas e os primeiros valores
+```{r} 
+str(leg_df_2018)
+```  
+ 
+
+## Visualizando a base - `head()`
+ 
+  - Finalmente, a função head() e tail()
+  - A primeira função apresenta os primeiros valores de uma base de dados
+```{r} 
+head(leg_df_2018,2)
+```  
+  - O segundo argumento serve para indicar quantas linhas serão apresentadas
+
+## Visualizando a base - `head()`
+  - Tail(), por outro lado, apresenta os últimos valores de uma base de dados
+```{r} 
+tail(leg_df_2018,2)
+```  
+ 
+
+
