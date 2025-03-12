@@ -546,7 +546,7 @@ library(foreign)
   - A função para isso é `setwd()`, que define o diretório da sua seção no R
   - Dentro da função, iremos inserir o local do arquivo
   
- Em caso de Windows, inverta as barras ou duplique.  
+ Antigamento, em caso de Windows, era necessário inverter as barras ou duplicar.  
  
  - *Não se esqueça das aspas!*  
  
