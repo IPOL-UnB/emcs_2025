@@ -470,16 +470,23 @@ rbind() # Empilha duas tabelas.
 ## O que são pacotes
  
   - O R possui diversas funções já instaladas dentro da sua programação
+
   - Exemplos são sum(), length(), class(), c()
+
   - Outras, porém, devem ser instaladas para que possam ser utilizadas pelos usuários
-  - A maneira com a qual instalamos novas funções, não definidas anteriormente no software, é através de pacotes
+
+  - A forma como instalamos novas funções, não definidas anteriormente no software, é através de pacotes
   
 ## O que são pacotes
-  - Pacotes concentram diversas funções para diversas demandas  
- Importação de dados;  
- Organização de banco de dados;  
- Análises estatísticas específicas;  
- Gráficos diferenciados;  
+Pacotes concentram diversas funções para diversas demandas  
+  
+ - Importação de dados;  
+ 
+ - Organização de banco de dados;  
+ 
+ - Análises estatísticas específicas;  
+ 
+ - Gráficos diferenciados;  
  
  
 
@@ -519,7 +526,6 @@ library(foreign)
  Para ativar o pacote, utilizar a função library() sem as aspas no nome do pacote instalado  
 ```{r,eval=F} 
 install.packages("foreign")
-
 library(foreign)
 ```  
   - Uma vez instalado o pacote, não é preciso instalar mais a não ser que você reinstale o R
@@ -527,31 +533,39 @@ library(foreign)
  
 
 # Importação de dados
+
 ## Passo a passo
  
   - A importação é uma das tarefas que demandam mais atenção no R
   - É preciso ter um conhecimento prévio de como sua base externa está constituída
   - Outra informação importante é a extensão do arquivo da base
+
+## Passo a passo
+
   - Primeiramente, a informação que deve ser dada ao software é onde está a base - diretório de trabalho
-  - A função necessária é setwd() que define o diretório da sua seção no R
-  - Dentro da função, iremos inserir o local do arquivo  
- Em caso de Windows, inverta as barras ou duplique;  
- Não se esqueça das aspas;  
+  - A função para isso é `setwd()`, que define o diretório da sua seção no R
+  - Dentro da função, iremos inserir o local do arquivo
+  
+ Em caso de Windows, inverta as barras ou duplique.  
+ 
+ - *Não se esqueça das aspas!*  
  
 ```{r,eval=F} 
 
-setwd("/Volumes/Macintosh HD/MQCP_IPOL_2020/Slides/aula 03") # mmudando meu direto
+setwd("~/Documents/emcs_2025/aula2") # mmudando meu diretorio de trabalho
 
 ```  
- 
- 
+
 
 ## Passo a passo
  
   - Esse diretório definido significa que as bases e os gráficos produzidos serão enviados para essa pasta
   - Finalmente, vamos importar as bases de dados
-  - Primeiro, vamos importar a base de extensão txt com o nome baserm
+  - Vamos começar importando a base de extensão .txt com o nome baserm
   - Não é preciso de pacote para esse procedimento
+  
+## Passo a passo
+
 ```{r} 
 lines <- readLines("dados/baserm.txt")
 
@@ -567,6 +581,9 @@ baserm <- read.table(text = lines, sep = '\t')
   - No pacote foreign, a forma mais genérica de importação da base é o read.table()
   - Entretanto, o pacote apresenta uma série de especialidades, a depender da extensão em questão
   - Para CSV, vimos que tem a read.csv(). Já para dta, base de origem do stata, temos a função read.dta()
+
+## Passo a passo  
+  
   - O pacote foreign não possui a extensão xlsx e xls, extensão muito encontrada e comum entre as bases de dados disponíveis
   - Para isso, vamos instalar um novo pacote readxl
 ```{r,eval=F} 
@@ -587,8 +604,12 @@ library(readxl)
 cgu <- 
 read_xlsx("dados/controle_cgu_municípios.xlsx")
 ```  
+
+
+## Passo a passo
+
   - Repare que acessamos apenas a primeira página da base
-  - Para acessarmos a segunda páginas, utilizamos o argumento sheet=2
+  - Para acessarmos a segunda página, utilizamos o argumento sheet=2
 ```{r,eval=F} 
 cgu <- 
 read_xlsx("dados/controle_cgu_municípios.xlsx", 
@@ -597,10 +618,13 @@ sheet = 2)
   - Alguns sinais de alerta surgem, porém não se trata de erro
  
 
-
 ## Importação por pacote 
  
   - Por fim, podemos importar dados através de pacotes
+```{r}
+pacman::p_load(electionsBR)
+```
+
   - Após ativar o pacote "ElectionsBR", a função legend_fed() fica disponível para a importação
   - Como toda a função, ou quase todas, possui argumentos importantes:
       - 'year =' se refere ao ano de extração
@@ -635,7 +659,7 @@ class(leg_df_2018)
 ## Visualizando a base
  
   - Uma visão completa da base é o comando View()
-  - Entretanto, cuidado, dependendo do tamanho da base, podemos travar o software
+
 ```{r, eval=F} 
 View(leg_df_2018)
 ```  
@@ -647,8 +671,8 @@ View(leg_df_2018)
 
 ## Visualizando a base
  
-  - Porém, para bases grandes, sabemos que é grande demais para sua visualização ser feita através do View()
-  - Algumas funções podem nos ajudar nessa tarefa
+  - Para bases grandes, pode ser reuim utilizar View()
+  - Outras funções podem nos ajudar nessa tarefa
   - A primeira é o dim, que as dimensões da base
 ```{r} 
 dim(leg_df_2018)
@@ -694,5 +718,12 @@ head(leg_df_2018,2)
 tail(leg_df_2018,2)
 ```  
  
+## Uso do $
+
+Lembrando que dataframes são listas de vetores
+
+```{r}
+leg_df_2018$SG_PARTIDO
+```
 
 
