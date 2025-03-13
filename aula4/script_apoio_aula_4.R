@@ -1,7 +1,16 @@
 
 ## Tidy data e janitor
+library(tidyverse)
 library(janitor)
 
+library(readr)
+baserm <- read_delim("aula4/dados/baserm.txt", 
+                     delim = "\t", escape_double = FALSE, 
+                     locale = locale(encoding = "WINDOWS-1252"), 
+                     trim_ws = TRUE)
+baserm
+
+write_rds(baserm,"aula4/dados/baserm.rds")
 
 # Pacotes `dplyr` e `tidyr`
 
@@ -16,11 +25,19 @@ glimpse(decisoes)
 
 
 
-
+# Isso aqui
 decisoes <- read_rds("dados/decisoes.rds") %>%
   janitor::clean_names() # com dois pontos eu não preciso usar library
-glimpse(decisoes)
 
+# eh igual a isso aqui
+read_rds("dados/decisoes.rds") %>%
+  janitor::clean_names() -> decisoes
+
+read_rds("dados/decisoes.rds") |>
+  janitor::clean_names() -> decisoes
+
+decisoes <- decisoes %>% 
+                 clean_names()
 
 
 
@@ -79,8 +96,8 @@ decisoes %>%
 ## `filter`
 
 
-decisoes %>% 
-  select(n_processo, id_decisao, municipio, juiz) %>% 
+sp_decisoes <- decisoes %>% 
+#  select(n_processo, id_decisao, municipio, juiz) %>% 
   filter(municipio == 'São Paulo')
 
 
@@ -126,6 +143,10 @@ decisoes %>%
 decisoes %>% 
   filter(year(dmy(data_decisao)) == 2018)
 
+decisoes %>% 
+  mutate(data_decisao = dmy(data_decisao)) %>% 
+  filter(year(data_decisao) == 2018) %>% 
+  dplyr::select(data_decisao,data_registro)
 
 # mutate
 
@@ -139,7 +160,9 @@ decisoes %>%
 
 decisoes %>% 
   select(n_processo, data_decisao, data_registro) %>% 
-  mutate(tempo = dmy(data_registro) - dmy(data_decisao))
+  mutate(data_registro=dmy(data_registro),
+         data_decisao=dmy(data_decisao),
+         tempo = data_registro - data_decisao)
 
 
 ## 
@@ -207,6 +230,22 @@ decisoes %>%
             max_anos = max(tempo_anos)) 
 
 
+decisoes %>% 
+  select(n_processo, municipio, data_decisao) %>%
+  #        pega ano da decisão
+  mutate(ano_julgamento = year(dmy(data_decisao)),
+         # pega o ano do processo 0057003-20.2017.8.26.0000" -> "2017"
+         ano_proc = str_sub(n_processo, 12, 15),
+         # transforma o ano em inteiro
+         ano_proc = as.numeric(ano_proc),
+         # calcula o tempo em anos
+         tempo_anos = ano_julgamento - ano_proc) %>% 
+  group_by(municipio) %>% 
+  summarise(n=n(),
+            n_processos = n_distinct(n_processo),
+            media_anos = mean(tempo_anos),
+            min_anos = min(tempo_anos),
+            max_anos = max(tempo_anos)) 
 
 ## usando `count()`
 
