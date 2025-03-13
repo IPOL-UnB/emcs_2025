@@ -1,0 +1,485 @@
+---
+title: "Aula 4 - Manipulando seus Dados"
+author: "Frederico Bertholini"
+subtitle: "Escola de Métodos em Ciências Sociais"
+format: 
+    revealjs:
+      self-contained: true
+      lang: pt-BR
+      toc: true
+      toc-depth: 1
+      theme: moon
+      footer: CURSO DE R
+      logo: imgs/logo.png
+      
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T,eval=T)
+```
+## Rode seus pacotes!
+
+```{r}
+pacman::p_load("tidyverse","haven","lubridate",
+         "janitor","readxl",
+          "stringr", "magrittr","srvyr",
+         "survey")
+```
+
+```{r echo=FALSE}
+decisoes <- read_rds("dados/decisoes.rds") %>%
+  janitor::clean_names()
+```
+
+
+# tydyr
+
+
+## Alterando o formato de dados
+
+Até agora, estudamos os principais ferramentas de transformação de dados do `dplyr`. Agora vamos aumentar nossa caixa-de-ferramentas com `tidyr`
+
+- Carregando uma nova base de dados, que completa a de decisões.
+
+```{r echo=TRUE}
+processos <- read_rds("dados/processos_nested.rds")
+```
+
+
+## Fomato tidy
+
+Hadley Wickham <https://r4ds.hadley.nz/data-tidy#sec-tidy-data>
+
+![](imgs/tidy-1.png)
+
+
+## Funções do pacote
+
+Enquanto o `dplyr` faz recortes na base (com `filter()`e `select()`) e adições simples (`mutate()`, `summarise()`), o `tidyr` mexe no **formato** da tabela (`pivot_longer` e `pivot_wider`) e faz modificações menos triviais.
+
+
+- As funções do `tidyr` geralmente vêm em pares com seus inversos:
+    - `pivot_longer` e `pivot_wider` (substituindo `gather()` e `spread()`)
+    - `nest()` e `unnest()`,
+    - `separate()` e `unite()`
+
+
+## Onde estamos
+
+
+<https://r4ds.hadley.nz/data-transform>
+
+![](imgs/wrangle.png)
+
+# `pivot_wider()` e `pivot_longer()`
+
+
+## `pivot_wider()`
+
+empilha o banco de dados
+
+```{r}
+decisoes %>% 
+  filter(!is.na(id_decisao)) %>% 
+  select(id_decisao:data_registro) %>% 
+  pivot_longer(!id_decisao, 
+               names_to = "tipo", # diz a varável onde entrarão os nomes
+               values_to = "info" # diz a variável onde entrarão os valores
+               )
+```
+
+
+## `gather()` 
+
+- substituida por `pivot_longer` 
+
+```{r, warning=FALSE, message=FALSE}
+decisoes %>% 
+  filter(!is.na(id_decisao)) %>% 
+  select(id_decisao:data_registro) %>% 
+  # 1. nome da coluna que vai guardar os nomes de colunas empilhadas
+  # 2. nome da coluna que vai guardar os valores das colunas
+  # 3. seleção das colunas a serem empilhadas
+  gather(key="variavel", value="valor", -id_decisao) %>% 
+  arrange(id_decisao)
+```
+
+## `pivot_longer()` em uma base que faça mais sentido
+
+Vamos usar a base `relig_income` do `tidyr` como exemplo, olhando 3 variáveis:
+
+  - religion, nas linhas
+  - income, nas colunas  e
+  - count, nas células
+
+```{r}
+tidyr::relig_income # exemplo de base dados que vem com pacote
+```
+
+## `pivot_longer()` em ação
+
+```{r}
+tidyr::relig_income %>%
+  pivot_longer(!religion, 
+               names_to = "income", # diz a varável onde entrarão os nomes
+               values_to = "count" # diz a variável onde entrarão os valores
+               )
+```
+
+
+
+## `pivot_wider`
+
+espalha uma variável nas colunas e preenche com outra variável
+
+```{r}
+decisoes %>% 
+  filter(!is.na(id_decisao)) %>% 
+  select(id_decisao:data_registro) %>% 
+  pivot_longer(!id_decisao, 
+               names_to = "tipo", # diz a varável onde entrarão os nomes
+               values_to = "info" # diz a variável onde entrarão os valores
+               ) %>% 
+  pivot_wider(names_from = "tipo",  # 1. coluna a ser espalhada
+              values_from = "info")  # 2. valores da coluna
+```
+
+## `spread()`
+
+- `spread()` é a função inversa de `gather`
+
+- substituída por `pivot_wider`
+
+```{r}
+decisoes %>% 
+  filter(!is.na(id_decisao)) %>% 
+  select(id_decisao:data_registro) %>% 
+  gather(key, value, -id_decisao) %>% 
+  # 1. coluna a ser espalhada
+  # 2. valores da coluna
+  spread(key, value)
+```
+
+
+## Exercício 1
+
+- Qual juiz julga a maior proporção de processos que tratam de drogas?
+
+- Dicas:
+
+ -- construa um `data.frame` contendo as colunas juiz, n_processos_drogas, n_processos_n_drogas e total_processos, 
+ 
+ -- remodele os dados para haver um juiz por linha utilizando `pivot_wider()`
+    
+## Resolução
+
+```{r,echo=T}
+decisoes %>% 
+  filter(!is.na(txt_decisao)) %>%
+  mutate(txt_decisao = tolower(txt_decisao),
+         droga = str_detect(txt_decisao,
+    "droga|entorpecente|psicotr[óo]pico|maconha|haxixe|coca[íi]na"),
+    droga=case_when(
+      droga==TRUE ~ "droga",
+      droga==FALSE ~ "n_droga"
+    )) %>%
+  group_by(juiz,droga) %>%
+  summarise(n=n()) %>%
+  pivot_wider(names_from = droga, 
+              values_from = n, 
+              values_fill = 0) %>%
+  mutate(total=droga+n_droga,
+         proporcao=droga/total)
+  
+  
+```
+
+## Exercício 2
+
+- Elabore uma tabela com a quantidade mensal de decisões por juiz, sendo cada mês uma coluna.
+
+- Dica: use `data_decisao` `dmy()` e `month()`
+    
+## Resolução
+
+```{r,eval=F}
+decisoes %>%
+  mutate(mes_decisao = month(dmy(data_decisao),label = T)) %>%
+  count(juiz,mes_decisao) %>%
+  arrange(mes_decisao) %>%
+  drop_na(mes_decisao) %>%
+  pivot_wider(names_from = mes_decisao, 
+              values_from = n, 
+              values_fill = 0) 
+  
+  
+```
+
+
+## Resultado
+
+
+```{r,echo=F}
+decisoes %>%
+  mutate(mes_decisao = month(dmy(data_decisao),label = T)) %>%
+  count(juiz,mes_decisao) %>%
+  arrange(mes_decisao) %>%
+  drop_na(mes_decisao) %>%
+  pivot_wider(names_from = mes_decisao, 
+              values_from = n, 
+              values_fill = 0) 
+  
+  
+```
+
+
+
+
+## Unindo e separando colunas
+
+- `unite` junta duas ou mais colunas usando algum separador (`_`, por exemplo).
+- `separate` faz o inverso de `unite`, e uma coluna em várias usando um separador.
+
+## Exemplo de separação de colunas
+
+- Olhe os valores da variável classe_assunto
+
+```{r}
+decisoes %>%
+  pull(classe_assunto) %>% # a função `pull` faz o mesmo que $
+  head(8)
+```
+
+
+## Exemplo de separação de colunas
+
+- Vamos separar a coluna classe_assunto em duas colunas
+
+- coluna classe e coluna assunto
+
+- Existe separador? -> sim, `/`
+
+- Usei count apenas em assunto
+
+## Em ação
+```{r,eval=F}
+decisoes %>% 
+  select(n_processo, classe_assunto) %>% 
+  separate(classe_assunto, c('classe', 'assunto'), sep = ' / ', 
+           extra = 'merge', fill = 'right') %>% 
+  count(assunto, sort = TRUE)
+
+## count é um jeito resumido de usar group_by() %>% summarise(n())
+```
+
+## 
+```{r,echo=F}
+decisoes %>% 
+  select(n_processo, classe_assunto) %>% 
+  separate(classe_assunto, c('classe', 'assunto'), sep = ' / ', 
+           extra = 'merge', fill = 'right') %>% 
+  count(assunto, sort = TRUE)
+
+
+```
+
+
+## List columns: `nest()` e `unnest()`
+
+`nest()` e `unnest()` são operações inversas e servem para tratar dados complexos, como o que temos em `processos`
+
+```{r}
+d_partes <- processos %>% 
+  select(n_processo, partes) %>% 
+  unnest(partes)
+```
+
+## Olhando `unnest()`
+
+As list columns são uma forma condensada de guardar dados que estariam em múltiplas tabelas. Por exemplo, uma alternativa à colocar as `partes` numa list column seria guardar a tabela `d_partes` separadamente.
+
+```{r}
+
+glimpse(d_partes)
+```
+
+
+
+# Limpeza
+
+## Duplicatas
+
+Para retirar duplicatas, utilizar `distinct`. Ele considera apenas a primeira linha em que encontra um padrão para as combinações de variáveis escolhidas e descarta as demais.
+
+```{r eval=F}
+decisoes %>% 
+  distinct(municipio)
+```
+
+##
+
+```{r echo=F}
+decisoes %>% 
+  distinct(municipio)
+```
+
+
+
+## Por coluna
+
+Para manter as demais colunas, use `.keep_all=`:
+
+```{r eval=F}
+decisoes %>%
+  distinct(municipio, camara, 
+           .keep_all = TRUE)
+```
+
+##
+
+```{r echo=F}
+decisoes %>%
+  distinct(municipio, camara, 
+           .keep_all = TRUE)
+```
+
+
+
+## `janitor::get_dupes()`
+
+Use `janitor::get_dupes()` para averiguar os casos em que há repetição de combinações de colunas.
+
+```{r eval=F}
+decisoes %>% 
+  get_dupes(n_processo)
+```
+
+
+## `janitor::get_dupes()` em ação
+
+```{r echo=F}
+decisoes %>% 
+  get_dupes(n_processo)
+```
+
+## Exemplos `janitor`
+
+- Janitor exemplos <http://sfirke.github.io/janitor/articles/janitor.html>
+
+- Missing e imputação <https://www.analyticsvidhya.com/blog/2016/03/tutorial-powerful-packages-imputing-missing-values/>
+
+- Outliers (critérios, limpeza e gráficos)
+
+- `stringi` e `stringr`
+
+
+
+# Joins
+
+## Dados relacionais
+
+- Hadley Wickham <https://r4ds.hadley.nz/joins>
+
+## Principais funções 
+
+Para juntar tabelas, usar `inner_join`, `left_join`, `anti_join`, etc. 
+
+## Visualizando
+
+![](imgs/join-venn.png)
+**PREFIRA LEFT JOIN**
+
+## Uma base simples para join
+
+Vamos criar dois objetos com uma **chave primária** comum: party
+
+1. Tamanho da bancada por partido
+```{r}
+bancadas <- read_rds("dados/bancadas.rds")
+```
+
+2. Participação em uma coligação por partido
+
+```{r}
+coligacoes <- read_excel("dados/coligacoes.xlsx")
+```
+
+## Olhando bancadas
+
+```{r echo=F}
+bancadas
+```
+
+## Olhando coligações
+
+```{r echo=F}
+coligacoes
+```
+
+## Exemplo de left join (sempre)
+
+```{r}
+obj.left_join <- bancadas %>%
+  left_join(coligacoes)
+
+glimpse(obj.left_join)
+```
+
+##
+```{r echo=F}
+obj.left_join
+```
+
+
+## Exemplo de inner join
+
+```{r}
+obj.inner_join <- bancadas %>%
+  inner_join(coligacoes)
+
+glimpse(obj.inner_join)
+```
+
+##
+```{r echo=F}
+obj.inner_join
+```
+
+
+
+## Exemplo de right join:
+
+
+```{r}
+obj.right_join  <- bancadas %>%
+  right_join(coligacoes)
+
+glimpse(obj.right_join)
+
+```
+
+##
+
+```{r echo=F}
+obj.right_join
+```
+
+## Exemplo de full join:
+
+
+```{r}
+obj.full_join <- bancadas %>%
+  full_join(coligacoes)
+
+glimpse(obj.full_join)
+
+```
+
+##
+
+```{r echo=F}
+obj.full_join
+```
+
+

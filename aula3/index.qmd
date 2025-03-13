@@ -1,7 +1,7 @@
 ---
 title: "Aula 3 - Preparando seus Dados"
 author: "Frederico Bertholini"
-subtitle: "Escola de Métodos em Ciência Política"
+subtitle: "Escola de Métodos em Ciências Sociais"
 format: 
     revealjs:
       self-contained: true
@@ -154,6 +154,19 @@ No tidyverse, geralmente
 - Para esses aqui, usar o pacote `readr`
 - Você também pode experimentar o `data.table::fread`
 
+## Lembram nossa base `baserm`?
+
+Olha como ficou mais fácil agora:
+
+```{r}
+library(readr)
+baserm <- read_delim("dados/baserm.txt", 
+    delim = "\t", escape_double = FALSE, 
+    locale = locale(encoding = "WINDOWS-1252"), 
+    trim_ws = TRUE)
+baserm
+```
+
 
 ## Arquivos binários
 
@@ -169,15 +182,6 @@ No tidyverse, geralmente
 
 - Utilizar pacotes `DBI` e `odbc`
 
-## Tidy data e janitor
-
-Veremos mais à frente, mas janitor::clean_names() é uma ferramenta tidy
-
-```{r}
-library(janitor)
-
-```
-
 
 
 # Pacotes `dplyr` e `tidyr`
@@ -191,9 +195,11 @@ decisoes <- read_rds("dados/decisoes.rds")
 glimpse(decisoes)
 ```
 
+## Tidy data e janitor
+
 
 ```{r}
-
+library(janitor)
 decisoes <- read_rds("dados/decisoes.rds") %>%
   janitor::clean_names() # com dois pontos eu não preciso usar library
 glimpse(decisoes)
