@@ -61,8 +61,10 @@ Enquanto o `dplyr` faz recortes na base (com `filter()`e `select()`) e adições
 
 - As funções do `tidyr` geralmente vêm em pares com seus inversos:
     - `pivot_longer` e `pivot_wider` (substituindo `gather()` e `spread()`)
-    - `nest()` e `unnest()`,
+    
     - `separate()` e `unite()`
+    
+    - `nest()` e `unnest()`
 
 
 ## Onde estamos
@@ -105,7 +107,7 @@ decisoes %>%
   arrange(id_decisao)
 ```
 
-## `pivot_longer()` em uma base que faça mais sentido
+## `pivot_longer()` em uma base de exercício
 
 Vamos usar a base `relig_income` do `tidyr` como exemplo, olhando 3 variáveis:
 
