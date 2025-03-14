@@ -77,7 +77,7 @@ Enquanto o `dplyr` faz recortes na base (com `filter()`e `select()`) e adições
 # `pivot_wider()` e `pivot_longer()`
 
 
-## `pivot_wider()`
+## `pivot_longer()`
 
 empilha o banco de dados
 
